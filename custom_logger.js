@@ -230,7 +230,7 @@
 	enable(logConfig.enableLog); // Don't show logs if configuration prohibits
 	setlogTypes(logConfig.logTypes);
 
-	window._this = {
+	window.logger = {
 		enable: enable,
 		setlogTypes: setlogTypes,
 		getlogTypes: getlogTypes,
