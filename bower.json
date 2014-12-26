@@ -2,7 +2,7 @@
   "name": "logger",
   "version": "0.1.0",
   "authors": [
-    "Kamalakannan Jayaraman"
+    "Vijayanand Santhiyagu"
   ],
   "description": "This library helps you for more advanced and controllable browser logs",
   "main": "custom_logger.js",

@@ -10,7 +10,7 @@
   */
 
 /** Configure this variable if you want to have your custom config */
-(function(){
+(function(){ 
 
 	var logConfig;
 
