@@ -1,0 +1,22 @@
+{
+  "name": "logger",
+  "version": "0.1.0",
+  "authors": [
+    "Kamalakannan Jayaraman"
+  ],
+  "description": "This library helps you for more advanced and controllable browser logs",
+  "main": "custom_logger.js",
+  "keywords": [
+    "logger",
+    "log"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

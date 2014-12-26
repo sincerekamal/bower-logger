@@ -1,0 +1,21 @@
+{
+  "name": "logger",
+  "version": "0.1.0",
+  "description": "This is advanced logger, bower version of https://github.com/KamalakannanPE/npm-logger.git",
+  "main": "custom_logger.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KamalakannanPE/logger.git"
+  },
+  "keywords": [
+    "client-side",
+    "logger",
+    "log"
+  ],
+  "author": "Kamalakannan Jayaraman",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/KamalakannanPE/logger/issues"
+  },
+  "homepage": "https://github.com/KamalakannanPE/logger"
+}
