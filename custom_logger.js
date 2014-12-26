@@ -1,10 +1,18 @@
+/** @author VijayAnand Santhiyagu */
 /*  Logger Utility */
 /* This library helps for advanced logging */
 /* Configuration can also can be done */
 
-/** For best practices, we will be using this library, instead of console.log
+/** For best practices, we will be using this service, instead of console.log
   * @example logger.log("loglevel", "logcategory", logmsg, [logmsgs][..])
-  *  @param {logleve} - all, none, log, debug, info, warning, error
+  *  @param {loglevels} - all, none, log, debug, info, warning, error
+  *   logLevels have this precedence
+  *  		log - error, warning, debug, info, log
+			debug - error, warning, info, log
+			info - error, warning, info
+			warning - error, warning
+			error - error
+  *
   *  @param {logTypes} - It is set in the config object, for example: mongo, sockets, etc.,
   *  @param {logmsg} - Message to be printed, string, object, array, int
   */
