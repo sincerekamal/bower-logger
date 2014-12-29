@@ -5,12 +5,12 @@
 
 /** For best practices, we will be using this service, instead of console.log
   * @example logger.log("loglevel", "logcategory", logmsg, [logmsgs][..])
-  *  @param {loglevels} - all, none, log, debug, info, warning, error
+  *  @param {loglevels} - all, none, log, debug, info, warn, error
   *   logLevels have this precedence
-  *  		log - error, warning, debug, info, log
-			debug - error, warning, info, log
-			info - error, warning, info
-			warning - error, warning
+  *  		log - error, warn, debug, info, log
+			debug - error, warn, info, log
+			info - error, warn, info
+			warn - error, warn
 			error - error
   *
   *  @param {logTypes} - It is set in the config object, for example: mongo, sockets, etc.,
@@ -49,7 +49,7 @@
 	};
 
 
-	_this.levels = ["all", "log", "debug", "info", "warning", "error", "none"];
+	_this.levels = ["all", "log", "debug", "info", "warn", "error", "none"];
 	_this.logTypes = {all: true, none: false};
 
 	var getTime = function () {
@@ -92,6 +92,39 @@
 		}
 		return params;
 	};
+
+	var log = function () {
+		if (shouldLog(arguments[0], arguments[1])) {
+			switch (arguments[0]) {
+				case 'error':
+					_style.level = "font-weight: bold; color: red";
+					break;
+				case 'warn':
+					_style.level = "color: red";
+					break;
+
+				case 'debug':
+					_style.level = "color: #777978";
+					console.debug = (!console.debug) ? console.log : console.debug;
+					break;
+				case 'info':
+					_style.level = "color: magenta";
+					console.info = (!console.info) ? console.log : console.info;
+					break;
+				case 'log':
+					_style.level = "color: grey";
+					break;
+				default:
+					_style.level = "color: grey";
+			}
+			if (console[arguments[0]]['apply']) {
+				console[arguments[0]].apply(console, getFormattedParams(arguments));
+			} else {
+				console[arguments[0]](toJsonString(arguments));
+			}
+		}
+	};
+
 	var shouldLog = function (level, category) {
 
 		/* _this in the document always refer to the logger library object */
@@ -117,11 +150,6 @@
 		}
 	};
 
-	var __toObject = function(value) {
-		if (value == null) throw TypeError();
-		return Object(value);
-	};
-
 	var setlogTypes = function(logTypes) {
 		_this.logTypes = logTypes;
 	};
@@ -130,88 +158,13 @@
 		return _this.logTypes;
 	};
 
+	var __toObject = function(value) {
+		if (value == null) throw TypeError();
+		return Object(value);
+	};
+
 	var enable = function (enable) {
 		_this.logTypes["none"] = ! enable;
-	};
-
-	var log = function () {
-		if (shouldLog(arguments[0], arguments[1])) {
-			if (arguments[0] == "error") {
-				_style.level = "font-weight: bold; color: red";
-				_this._error.apply(_this, arguments);
-			}
-			else if (arguments[0] == "warning") {
-				_style.level = "color: red";
-				_this._warn.apply(_this, arguments);
-			}
-			else if (arguments[0] == "debug") {
-				_style.level = "color: #777978";
-				_this._debug.apply(_this, arguments);
-			}
-			else if (arguments[0] == "info") {
-				_style.level = "color: magenta";
-				_this._info.apply(_this, arguments);
-			}
-			else if (arguments[0] == "log") {
-				_style.level = "color: grey";
-				_this._log.apply(_this, arguments);
-			}
-		}
-	}
-
-	_this._jsonStringify = function(obj) {
-			var jsonString = "";
-			try {
-				jsonString = JSON.stringify(arguments);
-			}
-			catch(err) {
-				jsonString = "Failed to stringify. Debuging in this browser is not recommended";
-			}
-			return jsonString;
-	};
-
-	_this._error = function () {
-		if (console.error['apply']) {
-			console.error.apply(console, getFormattedParams(arguments));
-		} else {
-			console.error(_this._jsonStringify(arguments));
-		}
-	};
-
-	_this._log = function () {
-		if (console.log['apply']) {
-			console.log.apply(console, getFormattedParams(arguments));
-		} else {
-			console.log(_this._jsonStringify(arguments));
-		}
-	};
-
-	_this._warn = function () {
-		if (console.warn['apply']) {
-			console.warn.apply(console, getFormattedParams(arguments));
-		} else {
-			console.warn(_this._jsonStringify(arguments));
-		}
-	};
-
-	_this._info = function () {
-		if (!console.info)
-			console.info = console.log;
-		if (console.info['apply']) {
-			console.info.apply(console, getFormattedParams(arguments));
-		} else {
-			console.info(_this._jsonStringify(arguments));
-		}
-	};
-
-	_this._debug = function () {
-		if (!console.debug)
-			console.debug = console.log;
-		if (console.debug['apply']) {
-			console.debug.apply(console, getFormattedParams(arguments));
-		} else {
-			console.debug(_this._jsonStringify(arguments));
-		}
 	};
 
 	var isColorSupported = function() {
@@ -226,6 +179,16 @@
 		}
 	};
 
+	var toJsonString = function(obj) {
+			var jsonString = "";
+			try {
+				jsonString = JSON.stringify(arguments);
+			}
+			catch(err) {
+				jsonString = "JSON not supported by this browser";
+			}
+			return jsonString;
+	};
 
 	enable(logConfig.enableLog); // Don't show logs if configuration prohibits
 	setlogTypes(logConfig.logTypes);
