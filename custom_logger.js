@@ -43,9 +43,9 @@
 	/* Define the style for each layer in the output */
 	var _style = {
 		timestamp: 'color:green',
-	 	level: null,
-	 	category: 'color:#B30BF9; font-style:oblique',
-	 	message: 'color: black'
+		level: null,
+		category: 'color:#B30BF9; font-style:oblique',
+		message: 'color: black'
 	};
 
 
@@ -90,6 +90,7 @@
 				params.push(args[i]);
 			}
 		}
+		params.push("\n Called"+getStack().slice(0));
 		return params;
 	};
 
@@ -188,6 +189,35 @@
 				jsonString = "JSON not supported by this browser";
 			}
 			return jsonString;
+	};
+
+	var getStack = function () { // looked up at http://stackoverflow.com/questions/4671031/print-function-log-stack-trace-for-entire-program-using-firebug
+		var callstack = [];
+		var isCallstackPopulated = false;
+		var lines, i, len;
+		try {
+			// It will throw an error, so that we can catch below
+			i.dont.exist += 0;
+		} catch (e) {
+			if (e.stack) { //Firefox / chrome
+				lines = e.stack.split('\n');
+				// lines[4] has the original calling line
+				callstack.push(lines[4]);
+				isCallstackPopulated = true;
+			}
+		}
+		if (!isCallstackPopulated) { //IE and Safari
+			var currentFunction = arguments.callee.caller; // This is violation of strict mode of ES5, but the use case is valid
+			var fn;
+			var fname;
+			while (currentFunction) {
+				fn = currentFunction.toString();
+				fname = fn.substring(fn.indexOf("function") + 8, fn.indexOf("(")) || "anonymous";
+				callstack.push(fname);
+				currentFunction = currentFunction.caller;
+			}
+		}
+		return callstack;
 	};
 
 	enable(logConfig.enableLog); // Don't show logs if configuration prohibits
